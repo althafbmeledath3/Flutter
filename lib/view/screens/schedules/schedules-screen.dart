@@ -514,27 +514,22 @@ class SchedulesScreen extends StatelessWidget {
                                                         AwesomeDialog(
                                                           width: 350.w,
                                                           context: context,
-                                                          animType: AnimType
-                                                              .LEFTSLIDE,
-                                                          headerAnimationLoop:
-                                                              false,
-                                                          dialogType:
-                                                              DialogType.SUCCES,
+                                                          animType: AnimType.leftSlide,
+                                                          headerAnimationLoop: false,
+                                                          dialogType: DialogType.success,
                                                           showCloseIcon: true,
-                                                          title: 'Succes',
+                                                          title: 'Success', // Corrected typo here
                                                           desc: 'File uploaded',
                                                           btnOkOnPress: () {
-                                                            debugPrint(
-                                                                'OnClcik');
+                                                            debugPrint('OnClick');
                                                           },
-                                                          btnOkIcon: Icons
-                                                              .check_circle,
-                                                          onDissmissCallback:
-                                                              (type) {
-                                                            debugPrint(
-                                                                'Dialog Dissmiss from callback $type');
+                                                          btnOkIcon: Icons.check_circle,
+                                                          // Using the correct callback to handle dismissal
+                                                          onDismissCallback: (type) {
+                                                            debugPrint('Dialog Closed with type: $type');
                                                           },
                                                         ).show();
+
                                                       }
 
                                                       c.update();

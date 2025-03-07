@@ -174,8 +174,8 @@ class SubjectItem extends StatelessWidget {
                                                 options: c.classesOptions,
                                                 whenEmpty: 'Chose Classes',
                                                 onChanged: (value) {
-                                                  c.selectedclassesOptionList
-                                                      .value = value;
+                                                  c.selectedclassesOptionList.value = List<String>.from(value);  // Ensure you create a new list from the passed value
+
                                                   c.selectedclassesOption
                                                       .value = '';
                                                   c.selectedclassesOptionList

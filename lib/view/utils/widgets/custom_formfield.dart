@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:school_management_system/view/utils/constants/font_style.dart';
-
 import '../constants/constant.dart';
 
 Widget customFormField({
@@ -19,14 +17,20 @@ Widget customFormField({
   IconData? suffix,
   Color? color,
   Function? suffixPressed,
+  double height = 60.0, // Add height parameter
+  double width = double.infinity, // Add width parameter
 }) =>
     Container(
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-            color: black.withOpacity(0.15),
-            blurRadius: 12.r,
-            offset: Offset(0, 3))
-      ]),
+      height: height, // Use the passed height
+      width: width, // Use the passed width
+      decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: black.withOpacity(0.15),
+                blurRadius: 12.r,
+                offset: Offset(0, 3))
+          ]
+      ),
       child: TextFormField(
         controller: controller,
         keyboardType: type,
@@ -50,14 +54,14 @@ Widget customFormField({
             ),
             suffixIcon: suffix != null
                 ? IconButton(
-                    onPressed: () {
-                      suffixPressed!();
-                    },
-                    icon: Icon(
-                      suffix,
-                      color: lightGray,
-                    ),
-                  )
+              onPressed: () {
+                suffixPressed!();
+              },
+              icon: Icon(
+                suffix,
+                color: lightGray,
+              ),
+            )
                 : null,
             border: const OutlineInputBorder(),
             enabledBorder: OutlineInputBorder(
@@ -69,7 +73,7 @@ Widget customFormField({
               borderSide: BorderSide(color: lightPurple, width: 2.w),
             ),
             floatingLabelStyle:
-                sfRegularStyle(color: lightPurple, fontSize: 40.sp),
+            sfRegularStyle(color: lightPurple, fontSize: 40.sp),
             labelStyle: sfRegularStyle(color: lightGray, fontSize: 40.sp)),
       ),
     );

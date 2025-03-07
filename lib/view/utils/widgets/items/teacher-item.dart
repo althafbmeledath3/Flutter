@@ -16,7 +16,7 @@ class TeacherItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        controller.activeAddingTeacher();
+        controller.activateAddingTeacher(); // ✅ Correct method name
         controller.showInformation();
         controller.uploadTeacher(teacher);
         controller.uploadTeacherInformation();

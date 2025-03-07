@@ -56,7 +56,8 @@ class SubjectsScreen extends StatelessWidget {
                               options: c.gradesOptions,
                               whenEmpty: 'Grade',
                               onChanged: (value) {
-                                c.selectedGradesOptionList.value = value;
+                                c.selectedGradesOptionList.value = List<String>.from(value);
+
                                 c.selectedGradesOption.value = '';
                                 c.selectedGradesOptionList.value
                                     .forEach((element) {
@@ -241,8 +242,8 @@ class SubjectsScreen extends StatelessWidget {
                                                   options: c.teachersOptions,
                                                   whenEmpty: 'Chose Teachers',
                                                   onChanged: (value) {
-                                                    c.selectedTeachersOptionList
-                                                        .value = value;
+                                                    c.selectedTeachersOptionList.value = List<String>.from(value);
+
                                                     c.selectedTeachersOption
                                                         .value = '';
                                                     c.selectedTeachersOptionList

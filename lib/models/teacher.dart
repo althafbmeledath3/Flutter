@@ -6,26 +6,28 @@ class Teacher {
   var phoneNumber;
   String? study;
   String? university;
-  String? specializtion;
+  String? specialization; // ✅ Fixed spelling
   String? graduateYear;
   String? additional;
   List? subjects;
   List? grades;
   List? classes;
-  Teacher(
-      { this.firstName,
-       this.lastName,
-       this.email,
-       this.phoneNumber,
-       this.study,
-       this.specializtion,
-       this.university,
-       this.graduateYear,
-       this.subjects,
-       this.grades,
-       this.classes,
-       this.id,
-       this.additional});
+
+  Teacher({
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.phoneNumber,
+    this.study,
+    this.specialization, // ✅ Fixed spelling
+    this.university,
+    this.graduateYear,
+    this.subjects,
+    this.grades,
+    this.classes,
+    this.id,
+    this.additional
+  });
 }
 
 List teachers = [
@@ -35,7 +37,7 @@ List teachers = [
       email: 'email1',
       phoneNumber: 'phoneNumber1',
       study: 'study1',
-      specializtion: 'specializtion1',
+      specialization: 'specialization1', // ✅ Fixed spelling
       university: 'university1',
       graduateYear: 'graduateYear1',
       subjects: ['subject 1', 'subject 2', 'subject 3','subject 4','subject 5','subject 6','subject 7','subject 8'],
@@ -48,7 +50,7 @@ List teachers = [
       email: 'email2',
       phoneNumber: 'phoneNumber2',
       study: 'study2',
-      specializtion: 'specializtion2',
+      specialization: 'specialization2', // ✅ Fixed spelling
       university: 'university2',
       graduateYear: 'graduateYear2',
       subjects: ['subject 1', 'subject 2', 'subject 3'],
@@ -61,20 +63,20 @@ List teachers = [
       email: 'email3',
       phoneNumber: 'phoneNumber3',
       study: 'study3',
-      specializtion: 'specializtion3',
+      specialization: 'specialization3', // ✅ Fixed spelling
       university: 'university3',
       graduateYear: 'graduateYear3',
       subjects: ['subject 1', 'subject 2', 'subject 3'],
       grades: ['grade1', 'grade 2', 'grade 3'],
       classes: ['class1', 'classe 2', 'class3'],
       additional: 'additional3'),
-      Teacher(
+  Teacher(
       firstName: 'firstName4',
       lastName: 'lastName4',
       email: 'email4',
       phoneNumber: 'phoneNumber4',
       study: 'study4',
-      specializtion: 'specializtion4',
+      specialization: 'specialization4', // ✅ Fixed spelling
       university: 'university4',
       graduateYear: 'graduateYear4',
       subjects: ['subject 1', 'subject 2', 'subject 3'],
@@ -87,12 +89,11 @@ List teachers = [
       email: 'email5',
       phoneNumber: 'phoneNumber5',
       study: 'study5',
-      specializtion: 'specializtion5',
+      specialization: 'specialization5', // ✅ Fixed spelling
       university: 'university5',
       graduateYear: 'graduateYear5',
       subjects: ['subject 1', 'subject 2', 'subject 3'],
       grades: ['grade1', 'grade 2', 'grade 3'],
       classes: ['class1', 'classe 2', 'class3'],
       additional: 'additional5'),
-  
 ];

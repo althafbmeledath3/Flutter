@@ -4,6 +4,6 @@ import 'package:school_management_system/view/screens/login/login_controller.dar
 class LoginBinding implements Bindings{
   @override
   void dependencies(){
-    Get.lazyPut(() => LoginConroller());
+    Get.lazyPut<LoginController>(() => LoginController());
   }
 }

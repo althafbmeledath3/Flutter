@@ -19,7 +19,7 @@ class GradeSelector extends StatelessWidget {
       options: options,
       whenEmpty: 'Grade',
       onChanged: (value) {
-        selectedOptionList.value = value;
+        selectedOptionList.value = List<String>.from(value);
         selectedOption.value = '';
         selectedOptionList.value.forEach((element) {
           selectedOption.value =

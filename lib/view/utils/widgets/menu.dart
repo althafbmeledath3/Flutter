@@ -35,13 +35,13 @@ class menu extends StatelessWidget {
                   child: Padding(
                 padding: EdgeInsets.only(top: defaultPadding * 3),
                 child: Text(
-                  'SchoolMate',
+                  'College Application',
                   style: redHatBoldStyle(color: white, fontSize: 32),
                 ),
               )),
               Column(children: [
                 DarwerListItem(
-                    title: 'Your School',
+                    title: 'Your College',
                     icon: MyIcons.school,
                     press: () {
                       navigationController.updateIndex(0);

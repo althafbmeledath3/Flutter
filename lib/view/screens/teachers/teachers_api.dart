@@ -116,7 +116,8 @@ class TeachersApi {
             phoneNumber: value.docs[i]['phone'],
             email: value.docs[i]['email'],
             study: value.docs[i]['study'],
-            specializtion: value.docs[i]['specializtion'],
+            specialization: value.docs[i]['specialization'],
+
             university: value.docs[i]['University'],
             graduateYear: value.docs[i]['graduateYear'],
           ),

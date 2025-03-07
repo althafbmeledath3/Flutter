@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:school_management_system/view/screens/teachers/teachers_api.dart';
-
 import '../../../models/teacher.dart';
 
 class TeachersController extends GetxController {
@@ -17,6 +16,7 @@ class TeachersController extends GetxController {
   var additionalInfoController = TextEditingController();
   var teacherGradesController = TextEditingController()
     ..text = 'Grade1, Grade2, Grade3, Grade4, Grade5';
+
   Teacher? teacherInfo;
   var isEditing = false.obs;
   var isAdding = false.obs;
@@ -24,26 +24,22 @@ class TeachersController extends GetxController {
   var showInfo = false.obs;
 
   List<String> subjectsOptions = ['1', '2', '3'];
-  var selectedsubjectsOptionList = [''].obs;
-  var selectedsubjectsOption = ''.obs;
+  var selectedSubjectsOptionList = [''].obs;
+  var selectedSubjectsOption = ''.obs;
 
-  var myteachers = [].obs;
+  var myTeachers = [].obs; // ✅ Corrected variable name
 
   @override
   void onInit() {
-    getmyTeachers();
+    super.onInit();
+    getMyTeachers();
   }
 
-
-
-
   addTeacher() async {
-    print('adding teacher...');
-     EasyLoading.show(
-      status: 'loading...',
-      dismissOnTap: true,
-    );
-    await TeachersApi.addingTeacher(
+    print('Adding teacher...');
+    EasyLoading.show(status: 'loading...', dismissOnTap: true);
+
+    bool success = await TeachersApi.addingTeacher(
       firstNameController.text,
       lastNameController.text,
       emailController.text,
@@ -54,43 +50,49 @@ class TeachersController extends GetxController {
       graduateYearController.text,
       additionalInfoController.text,
     );
-    print('Done!');
-    EasyLoading.showSuccess('Great Success!');
-    update();
+
+    if (success) {
+      print('Done!');
+      EasyLoading.showSuccess('Teacher added successfully!');
+
+      await getMyTeachers(); // ✅ Fetch updated teacher list
+      stopUploadingInfo(); // ✅ Clear input fields after adding
+      deactivateAddingTeacher(); // ✅ Hide add teacher form
+      update(); // ✅ Refresh UI
+    } else {
+      EasyLoading.showError('Failed to add teacher!');
+    }
   }
 
 
-  getmyTeachers() async {
-    print('getting teahers ...');
-    myteachers.value = await TeachersApi.getTeachers();
-   
+  getMyTeachers() async {
+    print('Getting teachers...');
+    var teachers = await TeachersApi.getTeachers();
+    myTeachers.assignAll(teachers); // ✅ Correct way to update an observable list
+    update(); // ✅ Refresh UI
     print('Done!');
   }
+
+
 
   void uploadTeacher(Teacher teacher) {
-    this.teacherInfo = teacher;
+    teacherInfo = teacher;
   }
 
   void uploadTeacherInformation() {
-    firstNameController = TextEditingController()
-      ..text = teacherInfo!.firstName!;
-    lastNameController = TextEditingController()..text = teacherInfo!.lastName!;
-    emailController = TextEditingController()..text = teacherInfo!.email!;
-    phoneNumberController = TextEditingController()
-      ..text = teacherInfo!.phoneNumber.toString();
-    studyController = TextEditingController()..text = teacherInfo!.study!;
-    specializationController = TextEditingController()
-      ..text = teacherInfo!.specializtion!;
-    universityController = TextEditingController()
-      ..text = teacherInfo!.university!;
-    graduateYearController = TextEditingController()
-      ..text = teacherInfo!.graduateYear!;
-    additionalInfoController = TextEditingController()
-      ..text = teacherInfo!.additional!;
-    teacherGradesController = TextEditingController()
-      ..text = teacherInfo!.grades!.join(', ').toString();
-    teacherGradesController = TextEditingController()
-      ..text = teacherInfo!.subjects!.join(', ').toString();
+    if (teacherInfo != null) {
+      firstNameController.text = teacherInfo!.firstName ?? '';
+      lastNameController.text = teacherInfo!.lastName ?? '';
+      emailController.text = teacherInfo!.email ?? '';
+      phoneNumberController.text = teacherInfo!.phoneNumber?.toString() ?? '';
+      studyController.text = teacherInfo!.study ?? '';
+      specializationController.text = teacherInfo!.specialization ?? '';
+
+      universityController.text = teacherInfo!.university ?? '';
+      graduateYearController.text = teacherInfo!.graduateYear ?? '';
+      additionalInfoController.text = teacherInfo!.additional ?? '';
+      teacherGradesController.text = teacherInfo!.grades?.join(', ') ?? '';
+    }
   }
 
   void stopUploadingInfo() {
@@ -106,41 +108,47 @@ class TeachersController extends GetxController {
     teacherGradesController.clear();
   }
 
-  void deleting() {
-    this.isDeleting.value = !isDeleting.value;
+  void startDeleting() {
+    isDeleting.value = true;
     update();
   }
 
-  void activeAddingTeacher() {
-    this.isAdding.value = true;
+  void stopDeleting() {
+    isDeleting.value = false;
     update();
   }
 
-  void unactiveAddingTeacher() {
-    this.isAdding.value = false;
+  void activateAddingTeacher() { // ✅ Corrected method name
+    isAdding.value = true;
+    update();
+  }
+
+  void deactivateAddingTeacher() { // ✅ Corrected method name
+    isAdding.value = false;
     update();
   }
 
   void enableEditing() {
-    this.isEditing.value = true;
+    isEditing.value = true;
     update();
   }
 
   void disableEditing() {
-    this.isEditing.value = false;
+    isEditing.value = false;
     update();
   }
 
   void showInformation() {
-    this.showInfo.value = true;
+    showInfo.value = true;
   }
 
-  void unShowInformation() {
-    this.showInfo.value = false;
+  void hideInformation() { // ✅ Corrected method name
+    showInfo.value = false;
   }
 
   var selectedSubject = "Subject".obs;
   final selectSubjectOptions = ['1', '2', '3'];
+
   void setSelectedSubject(value) {
     selectedSubject.value = value;
     update();

@@ -11,6 +11,7 @@ import 'package:school_management_system/view/utils/constants/responsive.dart';
 import 'package:school_management_system/view/utils/widgets/submit_button.dart';
 import 'package:school_management_system/view/utils/widgets/week-day.dart';
 import 'package:slide_digital_clock/slide_digital_clock.dart';
+
 import 'package:table_calendar/table_calendar.dart';
 import '../../utils/widgets/header.dart';
 
@@ -25,198 +26,198 @@ class YourSchoolScreen extends StatelessWidget {
         builder: (YourSchoolController schoolController) {
           return !schoolController.dailyCheck.value
               ? SingleChildScrollView(
-                  child: Padding(
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: defaultPadding,
+                bottom: defaultPadding,
+                right: defaultPadding,
+                left: defaultPadding * 2,
+              ),
+              child: Column(
+                children: [
+                  Padding(
                     padding: EdgeInsets.only(
-                      top: defaultPadding,
-                      bottom: defaultPadding,
-                      right: defaultPadding,
-                      left: defaultPadding * 2,
+                      top: Responsive.isDesktop(context)
+                          ? defaultPadding * 3
+                          : Responsive.isTablet(context)
+                          ? defaultPadding * 2
+                          : defaultPadding,
+                      bottom: Responsive.isDesktop(context)
+                          ? defaultPadding * 3
+                          : Responsive.isTablet(context)
+                          ? defaultPadding * 2
+                          : defaultPadding,
                     ),
-                    child: Column(
+                    child: Header(
+                      text: 'Your College',
+                      size: size,
+                    ),
+                  ),
+                  Responsive(
+                    desktop: Row(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: Responsive.isDesktop(context)
-                                ? defaultPadding * 3
-                                : Responsive.isTablet(context)
-                                    ? defaultPadding * 2
-                                    : defaultPadding,
-                            bottom: Responsive.isDesktop(context)
-                                ? defaultPadding * 3
-                                : Responsive.isTablet(context)
-                                    ? defaultPadding * 2
-                                    : defaultPadding,
-                          ),
-                          child: Header(
-                            text: 'Your School',
-                            size: size,
-                          ),
-                        ),
-                        Responsive(
-                          desktop: Row(
-                            children: [
-                              MyCalender(),
-                              SizedBox(
-                                  width: (size.width > 1250)
-                                      ? size.width * 0.09
-                                      : size.width * 0.03),
-                              MyClock(),
-                            ],
-                          ),
-                          tablet: Row(
-                            children: [
-                              MyCalender(),
-                              SizedBox(
-                                width: (size.width > 950)
-                                    ? size.width * 0.125
-                                    : (size.width > 875)
-                                        ? size.width * 0.05
-                                        : 0.03,
-                              ),
-                              MyClock(),
-                            ],
-                          ),
-                          mobile: Column(
-                            children: [
-                              MyCalender(),
-                              SizedBox(
-                                height: 40,
-                              ),
-                              MyClock(),
-                            ],
-                          ),
-                        ),
+                        MyCalender(),
                         SizedBox(
-                          height: Responsive.isMobile(context) ? 40 : 80,
-                        ),
+                            width: (size.width > 1250)
+                                ? size.width * 0.09
+                                : size.width * 0.03),
+                        MyClock(),
+                      ],
+                    ),
+                    tablet: Row(
+                      children: [
+                        MyCalender(),
                         SizedBox(
-                          height: Responsive.isMobile(context) ? 88 : 100,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SubmitButton(text: 'Active Days', press: () {}),
-                              SizedBox(
-                                width: Responsive.isMobile(context) ? 32 : 40,
-                              ),
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: [
-                                      WeekDay(
-                                        text: 'Sat',
-                                        isSelected: (DateFormat('EEEE')
-                                                    .format(DateTime.now()) ==
-                                                'Saturday')
-                                            ? schoolController.updateDay()
-                                            : schoolController.unUpdateDay(),
-                                        onPress: schoolController.itsToday.value
-                                            ? () {
-                                                schoolController
-                                                    .startDailyCheck();
-                                              }
-                                            : null,
-                                      ),
-                                      WeekDay(
-                                        text: 'Sun',
-                                        isActiveDay: true,
-                                        isSelected: (DateFormat('EEEE')
-                                                    .format(DateTime.now()) ==
-                                                'Sunday')
-                                            ? schoolController.updateDay()
-                                            : schoolController.unUpdateDay(),
-                                        onPress: schoolController.itsToday.value
-                                            ? () {
-                                                schoolController
-                                                    .startDailyCheck();
-                                              }
-                                            : null,
-                                      ),
-                                      WeekDay(
-                                        text: 'Mon',
-                                        isActiveDay: true,
-                                        isSelected: (DateFormat('EEEE')
-                                                    .format(DateTime.now()) ==
-                                                'Monday')
-                                            ? schoolController.updateDay()
-                                            : schoolController.unUpdateDay(),
-                                        onPress: schoolController.itsToday.value
-                                            ? () {
-                                                schoolController
-                                                    .startDailyCheck();
-                                              }
-                                            : null,
-                                      ),
-                                      WeekDay(
-                                        text: 'Tue',
-                                        isActiveDay: true,
-                                        isSelected: (DateFormat('EEEE')
-                                                    .format(DateTime.now()) ==
-                                                'Tuesday')
-                                            ? schoolController.updateDay()
-                                            : schoolController.unUpdateDay(),
-                                        onPress: schoolController.itsToday.value
-                                            ? () {
-                                                schoolController
-                                                    .startDailyCheck();
-                                              }
-                                            : null,
-                                      ),
-                                      WeekDay(
-                                        text: 'Wed',
-                                        isActiveDay: true,
-                                        isSelected: (DateFormat('EEEE')
-                                                    .format(DateTime.now()) ==
-                                                'Wednesday')
-                                            ? schoolController.updateDay()
-                                            : schoolController.unUpdateDay(),
-                                        onPress: schoolController.itsToday.value
-                                            ? () {
-                                                schoolController
-                                                    .startDailyCheck();
-                                              }
-                                            : null,
-                                      ),
-                                      WeekDay(
-                                        text: 'Thu',
-                                        isActiveDay: true,
-                                        isSelected: (DateFormat('EEEE')
-                                                    .format(DateTime.now()) ==
-                                                'Thursday')
-                                            ? schoolController.updateDay()
-                                            : schoolController.unUpdateDay(),
-                                        onPress: schoolController.itsToday.value
-                                            ? () {
-                                                schoolController
-                                                    .startDailyCheck();
-                                              }
-                                            : null,
-                                      ),
-                                      WeekDay(
-                                        text: 'Fri',
-                                        isSelected: (DateFormat('EEEE')
-                                                    .format(DateTime.now()) ==
-                                                'Friday')
-                                            ? schoolController.updateDay()
-                                            : schoolController.unUpdateDay(),
-                                        onPress: schoolController.itsToday.value
-                                            ? () {
-                                                schoolController
-                                                    .startDailyCheck();
-                                              }
-                                            : null,
-                                      ),
-                                    ],
-                                  ),
+                          width: (size.width > 950)
+                              ? size.width * 0.125
+                              : (size.width > 875)
+                              ? size.width * 0.05
+                              : 0.03,
+                        ),
+                        MyClock(),
+                      ],
+                    ),
+                    mobile: Column(
+                      children: [
+                        MyCalender(),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        MyClock(),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: Responsive.isMobile(context) ? 40 : 80,
+                  ),
+                  SizedBox(
+                    height: Responsive.isMobile(context) ? 88 : 100,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SubmitButton(text: 'Active Days', press: () {}),
+                        SizedBox(
+                          width: Responsive.isMobile(context) ? 32 : 40,
+                        ),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                WeekDay(
+                                  text: 'Sat',
+                                  isSelected: (DateFormat('EEEE')
+                                      .format(DateTime.now()) ==
+                                      'Saturday')
+                                      ? schoolController.updateDay()
+                                      : schoolController.unUpdateDay(),
+                                  onPress: schoolController.itsToday.value
+                                      ? () {
+                                    schoolController
+                                        .startDailyCheck();
+                                  }
+                                      : null,
                                 ),
-                              ),
-                            ],
+                                WeekDay(
+                                  text: 'Sun',
+                                  isActiveDay: true,
+                                  isSelected: (DateFormat('EEEE')
+                                      .format(DateTime.now()) ==
+                                      'Sunday')
+                                      ? schoolController.updateDay()
+                                      : schoolController.unUpdateDay(),
+                                  onPress: schoolController.itsToday.value
+                                      ? () {
+                                    schoolController
+                                        .startDailyCheck();
+                                  }
+                                      : null,
+                                ),
+                                WeekDay(
+                                  text: 'Mon',
+                                  isActiveDay: true,
+                                  isSelected: (DateFormat('EEEE')
+                                      .format(DateTime.now()) ==
+                                      'Monday')
+                                      ? schoolController.updateDay()
+                                      : schoolController.unUpdateDay(),
+                                  onPress: schoolController.itsToday.value
+                                      ? () {
+                                    schoolController
+                                        .startDailyCheck();
+                                  }
+                                      : null,
+                                ),
+                                WeekDay(
+                                  text: 'Tue',
+                                  isActiveDay: true,
+                                  isSelected: (DateFormat('EEEE')
+                                      .format(DateTime.now()) ==
+                                      'Tuesday')
+                                      ? schoolController.updateDay()
+                                      : schoolController.unUpdateDay(),
+                                  onPress: schoolController.itsToday.value
+                                      ? () {
+                                    schoolController
+                                        .startDailyCheck();
+                                  }
+                                      : null,
+                                ),
+                                WeekDay(
+                                  text: 'Wed',
+                                  isActiveDay: true,
+                                  isSelected: (DateFormat('EEEE')
+                                      .format(DateTime.now()) ==
+                                      'Wednesday')
+                                      ? schoolController.updateDay()
+                                      : schoolController.unUpdateDay(),
+                                  onPress: schoolController.itsToday.value
+                                      ? () {
+                                    schoolController
+                                        .startDailyCheck();
+                                  }
+                                      : null,
+                                ),
+                                WeekDay(
+                                  text: 'Thu',
+                                  isActiveDay: true,
+                                  isSelected: (DateFormat('EEEE')
+                                      .format(DateTime.now()) ==
+                                      'Thursday')
+                                      ? schoolController.updateDay()
+                                      : schoolController.unUpdateDay(),
+                                  onPress: schoolController.itsToday.value
+                                      ? () {
+                                    schoolController
+                                        .startDailyCheck();
+                                  }
+                                      : null,
+                                ),
+                                WeekDay(
+                                  text: 'Fri',
+                                  isSelected: (DateFormat('EEEE')
+                                      .format(DateTime.now()) ==
+                                      'Friday')
+                                      ? schoolController.updateDay()
+                                      : schoolController.unUpdateDay(),
+                                  onPress: schoolController.itsToday.value
+                                      ? () {
+                                    schoolController
+                                        .startDailyCheck();
+                                  }
+                                      : null,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                )
+                ],
+              ),
+            ),
+          )
               : DailyCheckScreen(checkController: schoolController);
         },
       ),
@@ -244,7 +245,7 @@ class MyClock extends StatelessWidget {
         color: white,
       ),
       secondDigitDecoration: BoxDecoration(),
-      hourMinuteDigitDecoration: BoxDecoration(),
+
       hourMinuteDigitTextStyle: sfBoldStyle(color: purple, fontSize: 60),
       digitAnimationStyle: Curves.decelerate,
     );
@@ -307,7 +308,7 @@ class MyCalender extends StatelessWidget {
             ),
             todayTextStyle: redHatMediumStyle(fontSize: 16, color: white),
             todayDecoration:
-                BoxDecoration(gradient: gradientColor, shape: BoxShape.circle),
+            BoxDecoration(gradient: gradientColor, shape: BoxShape.circle),
             holidayTextStyle: redHatRegularStyle(
               fontSize: 16,
             ),
