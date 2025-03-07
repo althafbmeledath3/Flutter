@@ -5,97 +5,111 @@ import 'package:school_management_system/view/screens/teachers/teachers_api.dart
 import '../../../models/teacher.dart';
 
 class TeachersController extends GetxController {
-  var firstNameController = TextEditingController();
-  var lastNameController = TextEditingController();
-  var emailController = TextEditingController();
-  var phoneNumberController = TextEditingController();
-  var studyController = TextEditingController();
-  var specializationController = TextEditingController();
-  var universityController = TextEditingController();
-  var graduateYearController = TextEditingController();
-  var additionalInfoController = TextEditingController();
-  var teacherGradesController = TextEditingController()
+  // Controllers for form fields
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final studyController = TextEditingController();
+  final specializationController = TextEditingController();
+  final universityController = TextEditingController();
+  final graduateYearController = TextEditingController();
+  final additionalInfoController = TextEditingController();
+  final teacherGradesController = TextEditingController()
     ..text = 'Grade1, Grade2, Grade3, Grade4, Grade5';
 
-  Teacher? teacherInfo;
+  // Reactive variables
+  Rx<Teacher?> teacherInfo = Rx<Teacher?>(null);
   var isEditing = false.obs;
   var isAdding = false.obs;
   var isDeleting = false.obs;
   var showInfo = false.obs;
+  var myTeachers = <Teacher>[].obs;
 
+  // Subject selection
   List<String> subjectsOptions = ['1', '2', '3'];
-  var selectedSubjectsOptionList = [''].obs;
-  var selectedSubjectsOption = ''.obs;
-
-  var myTeachers = [].obs; // ✅ Corrected variable name
+  var selectedSubjectsOptionList = <String>[].obs;
+  var selectedSubject = "Subject".obs;
 
   @override
   void onInit() {
     super.onInit();
-    getMyTeachers();
+    print('📌 onInit called in TeachersController');
+    fetchTeachers();
   }
 
-  addTeacher() async {
-    print('Adding teacher...');
-    EasyLoading.show(status: 'loading...', dismissOnTap: true);
+  // Fetch teachers from API
+  Future<void> fetchTeachers() async {
+    print('📌 Fetching teachers from API...');
+    try {
+      var teachers = await TeachersApi.getTeachers();
+      if (teachers.isNotEmpty) {
+        myTeachers.assignAll(teachers);
+        print('✅ Teachers fetched: ${teachers.length}');
+      } else {
+        myTeachers.clear();
+        print('⚠️ No teachers found!');
+      }
+    } catch (e) {
+      print('❌ Error fetching teachers: $e');
+    }
+    update();
+  }
 
-    bool success = await TeachersApi.addingTeacher(
-      firstNameController.text,
-      lastNameController.text,
-      emailController.text,
-      phoneNumberController.text,
-      studyController.text,
-      specializationController.text,
-      universityController.text,
-      graduateYearController.text,
-      additionalInfoController.text,
-    );
+  // Add a new teacher
+  Future<void> addTeacher() async {
+    print('🟡 Adding teacher...');
+    EasyLoading.show(status: 'Adding teacher...', dismissOnTap: true);
 
-    if (success) {
-      print('Done!');
-      EasyLoading.showSuccess('Teacher added successfully!');
+    try {
+      bool success = await TeachersApi.addingTeacher(
+        firstNameController.text.trim(),
+        lastNameController.text.trim(),
+        emailController.text.trim(),
+        phoneNumberController.text.trim(),
+        studyController.text.trim(),
+        specializationController.text.trim(),
+        universityController.text.trim(),
+        graduateYearController.text.trim(),
+      );
 
-      await getMyTeachers(); // ✅ Fetch updated teacher list
-      stopUploadingInfo(); // ✅ Clear input fields after adding
-      deactivateAddingTeacher(); // ✅ Hide add teacher form
-      update(); // ✅ Refresh UI
-    } else {
-      EasyLoading.showError('Failed to add teacher!');
+      if (success) {
+        print('✅ Teacher added successfully!');
+        EasyLoading.showSuccess('Teacher added successfully!');
+        await fetchTeachers();
+        clearForm();
+        deactivateAddingTeacher();
+      } else {
+        print('❌ Failed to add teacher.');
+        EasyLoading.showError('Failed to add teacher!');
+      }
+    } catch (e) {
+      print('❌ Error adding teacher: $e');
+      EasyLoading.showError('An unexpected error occurred!');
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 
-
-  getMyTeachers() async {
-    print('Getting teachers...');
-    var teachers = await TeachersApi.getTeachers();
-    myTeachers.assignAll(teachers); // ✅ Correct way to update an observable list
-    update(); // ✅ Refresh UI
-    print('Done!');
-  }
-
-
-
+  // Upload teacher details into form fields
   void uploadTeacher(Teacher teacher) {
-    teacherInfo = teacher;
-  }
-
-  void uploadTeacherInformation() {
-    if (teacherInfo != null) {
-      firstNameController.text = teacherInfo!.firstName ?? '';
-      lastNameController.text = teacherInfo!.lastName ?? '';
-      emailController.text = teacherInfo!.email ?? '';
-      phoneNumberController.text = teacherInfo!.phoneNumber?.toString() ?? '';
-      studyController.text = teacherInfo!.study ?? '';
-      specializationController.text = teacherInfo!.specialization ?? '';
-
-      universityController.text = teacherInfo!.university ?? '';
-      graduateYearController.text = teacherInfo!.graduateYear ?? '';
-      additionalInfoController.text = teacherInfo!.additional ?? '';
-      teacherGradesController.text = teacherInfo!.grades?.join(', ') ?? '';
+    teacherInfo.value = teacher;
+    if (teacher != null) {
+      firstNameController.text = teacher.firstName ?? '';
+      lastNameController.text = teacher.lastName ?? '';
+      emailController.text = teacher.email ?? '';
+      phoneNumberController.text = teacher.phoneNumber?.toString() ?? '';
+      studyController.text = teacher.study ?? '';
+      specializationController.text = teacher.specialization ?? '';
+      universityController.text = teacher.university ?? '';
+      graduateYearController.text = teacher.graduateYear ?? '';
+      additionalInfoController.text = teacher.additional ?? '';
+      teacherGradesController.text = teacher.grades?.join(', ') ?? '';
     }
   }
 
-  void stopUploadingInfo() {
+  // Clear all form fields
+  void clearForm() {
     firstNameController.clear();
     lastNameController.clear();
     emailController.clear();
@@ -108,49 +122,34 @@ class TeachersController extends GetxController {
     teacherGradesController.clear();
   }
 
-  void startDeleting() {
-    isDeleting.value = true;
-    update();
-  }
+  // State management functions
+  void startDeleting() => isDeleting.value = true;
+  void stopDeleting() => isDeleting.value = false;
+  void activateAddingTeacher() => isAdding.value = true;
+  void deactivateAddingTeacher() => isAdding.value = false;
+  void enableEditing() => isEditing.value = true;
+  void disableEditing() => isEditing.value = false;
+  void showInformation() => showInfo.value = true;
+  void hideInformation() => showInfo.value = false;
 
-  void stopDeleting() {
-    isDeleting.value = false;
-    update();
-  }
-
-  void activateAddingTeacher() { // ✅ Corrected method name
-    isAdding.value = true;
-    update();
-  }
-
-  void deactivateAddingTeacher() { // ✅ Corrected method name
-    isAdding.value = false;
-    update();
-  }
-
-  void enableEditing() {
-    isEditing.value = true;
-    update();
-  }
-
-  void disableEditing() {
-    isEditing.value = false;
-    update();
-  }
-
-  void showInformation() {
-    showInfo.value = true;
-  }
-
-  void hideInformation() { // ✅ Corrected method name
-    showInfo.value = false;
-  }
-
-  var selectedSubject = "Subject".obs;
-  final selectSubjectOptions = ['1', '2', '3'];
-
-  void setSelectedSubject(value) {
+  void setSelectedSubject(String value) {
     selectedSubject.value = value;
     update();
+  }
+
+  @override
+  void onClose() {
+    // Dispose controllers to free memory
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    phoneNumberController.dispose();
+    studyController.dispose();
+    specializationController.dispose();
+    universityController.dispose();
+    graduateYearController.dispose();
+    additionalInfoController.dispose();
+    teacherGradesController.dispose();
+    super.onClose();
   }
 }

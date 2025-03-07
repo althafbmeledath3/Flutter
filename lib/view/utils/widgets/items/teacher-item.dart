@@ -19,7 +19,8 @@ class TeacherItem extends StatelessWidget {
         controller.activateAddingTeacher(); // ✅ Correct method name
         controller.showInformation();
         controller.uploadTeacher(teacher);
-        controller.uploadTeacherInformation();
+        controller.uploadTeacher(teacher);
+
       },
       child: Container(
         decoration: myDecoration,

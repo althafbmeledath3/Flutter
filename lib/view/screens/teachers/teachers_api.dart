@@ -1,131 +1,125 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:school_management_system/models/teacher.dart';
-import 'package:school_management_system/view/utils/constants/constant.dart';
 
 class TeachersApi {
-  static addingTeacher(
-    String firstName,
-    String lastName,
-    String email,
-    String phone,
-    String study,
-    String specialization,
-    String university,
-    String graduateYea,
-    String password,
-  ) async {
-    bool isExist = false;
-    String? docid;
-    await FirebaseFirestore.instance
-        .collection('teacher')
-        .where('email', isEqualTo: email)
-        .get()
-        .then((value) {
-      print(value.docs.length);
-      print("bruhhhhh");
-      if (value.docs.length >= 1) {
-        isExist = true;
-      }
-      for (var i = 0; i < value.docs.length; i++) {
-        print(
-          value.docs[i]['uid'],
-        );
-        docid = value.docs[i]['uid'];
-      }
-    });
+  // 🆕 ADD OR UPDATE TEACHER
+  static Future<bool> addingTeacher(
+      String firstName,
+      String lastName,
+      String email,
+      String phone,
+      String study,
+      String specialization,
+      String university,
+      String graduateYear,
+      ) async {
+    try {
+      var existingTeachers = await FirebaseFirestore.instance
+          .collection('teacher')
+          .where('email', isEqualTo: email)
+          .get();
 
-    print(isExist);
+      if (existingTeachers.docs.isNotEmpty) {
+        // 🔄 Update existing teacher
+        String docId = existingTeachers.docs.first.id;
 
-    if (isExist) {
+        final data = {
+          "University": university,
+          "email": email,
+          "first_name": firstName,
+          "graduateYear": graduateYear,
+          "last_name": lastName,
+          "specialization": specialization,
+          "study": study,
+          "phone": phone, // ✅ Keep phone as String
+        };
+
+        await FirebaseFirestore.instance.collection("teacher").doc(docId).update(data);
+        print("✅ Teacher updated successfully!");
+        return true;
+      }
+
+      // 🔥 Add new teacher with Firestore-generated ID
+      var docRef = FirebaseFirestore.instance.collection("teacher").doc();
+
       final data = {
+        "uid": docRef.id, // ✅ Use Firestore-generated ID
         "University": university,
         "email": email,
         "first_name": firstName,
-        "graduateYear": graduateYea,
+        "graduateYear": graduateYear,
         "last_name": lastName,
-        "specializtion": specialization,
+        "specialization": specialization,
         "study": study,
-        "phone": int.parse(phone),
-        "password": password,
-      };
-      await FirebaseFirestore.instance
-          .collection("teacher")
-          .doc(docid)
-          .update(data);
-    } else {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: password);
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          print('The password provided is too weak.');
-        } else if (e.code == 'email-already-in-use') {
-          print('The account already exists for that email.');
-        }
-      } catch (e) {
-        print(e);
-      }
-
-      final data = {
-        "University": university,
-        "email": email,
-        "first_name": firstName,
-        "graduateYear": graduateYea,
-        "last_name": lastName,
-        "specializtion": specialization,
-        "study": study,
-        "phone": int.parse(phone),
-        "urlAvatr":
-            "https://media.istockphoto.com/vectors/profile-anonymous-face-icon-gray-silhouette-person-male-default-vector-id903053114?k=6&m=903053114&s=612x612&w=0&h=WrxfHICcs-EyJt0IuX6J35f4lF0p4y1Bsy4AlVYeawY=",
+        "phone": phone, // ✅ Keep phone as String
+        "urlAvatar": "https://default-avatar-url.com",
         "token": "nothing",
       };
 
-      await FirebaseFirestore.instance
-          .collection("teacher")
-          .add(data)
-          .then((documentSnapshot) async {
-        print("Added Data with ID: ${documentSnapshot.id}");
+      await docRef.set(data);
+      print("✅ Teacher added successfully with UID: ${docRef.id}");
+      return true;
 
-        final data2 = {
-          "uid": documentSnapshot.id,
-        };
-        await FirebaseFirestore.instance
-            .collection('teacher')
-            .doc(documentSnapshot.id)
-            .update(data2);
-      });
+    } catch (e) {
+      print("❌ Error adding/updating teacher: $e");
+      return false;
     }
   }
 
-  static getTeachers() async {
-    List allTeachers = [];
+  // 📌 GET ALL TEACHERS
+  static Future<List<Teacher>> getTeachers() async {
+    List<Teacher> allTeachers = [];
 
-    print("yesssssssssssssssssss");
+    try {
+      var snapshot = await FirebaseFirestore.instance.collection('teacher').get();
 
-    await FirebaseFirestore.instance
-        .collection('teacher')
-        .get()
-        .then((value) async {
-      for (var i = 0; i < value.docs.length; i++) {
+      if (snapshot.docs.isEmpty) {
+        print("⚠️ No teachers found in Firestore!");
+      }
+
+      for (var doc in snapshot.docs) {
+        var data = doc.data();
+
         allTeachers.add(
           Teacher(
-            id: value.docs[i]['uid'],
-            firstName: value.docs[i]['first_name'],
-            lastName: value.docs[i]['last_name'],
-            phoneNumber: value.docs[i]['phone'],
-            email: value.docs[i]['email'],
-            study: value.docs[i]['study'],
-            specialization: value.docs[i]['specialization'],
-
-            university: value.docs[i]['University'],
-            graduateYear: value.docs[i]['graduateYear'],
+            id: doc.id, // ✅ Always use Firestore document ID
+            firstName: data.containsKey('first_name') ? data['first_name'] ?? '' : '',
+            lastName: data.containsKey('last_name') ? data['last_name'] ?? '' : '',
+            phoneNumber: data.containsKey('phone') ? data['phone'].toString() : '',
+            email: data.containsKey('email') ? data['email'] ?? '' : '',
+            study: data.containsKey('study') ? data['study'] ?? '' : '',
+            specialization: data.containsKey('specialization') ? data['specialization'] ?? '' : '',
+            university: data.containsKey('University') ? data['University'] ?? '' : '',
+            graduateYear: data.containsKey('graduateYear') ? data['graduateYear'].toString() : '',
           ),
         );
       }
-    });
-    print("noooooooooooooooo");
-    print(allTeachers);
+
+      print("📌 Teachers fetched: ${allTeachers.length}");
+    } catch (e) {
+      print("❌ Error fetching teachers: $e");
+    }
+
     return allTeachers;
+  }
+
+  // ✅ DEBUG FUNCTION: FETCH TEACHERS AND PRINT IN CONSOLE
+  static Future<void> testFirestoreFetch() async {
+    try {
+      var snapshot = await FirebaseFirestore.instance.collection('teacher').get();
+
+      if (snapshot.docs.isEmpty) {
+        print("⚠️ No teachers found in Firestore!");
+        return;
+      }
+
+      for (var doc in snapshot.docs) {
+        print("👤 Firestore Data: ${doc.data()}");
+      }
+
+      print("📌 Total Teachers: ${snapshot.docs.length}");
+    } catch (e) {
+      print("❌ Error fetching teachers: $e");
+    }
   }
 }

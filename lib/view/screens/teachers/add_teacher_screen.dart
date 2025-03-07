@@ -32,7 +32,8 @@ class AddTeacherScreen extends StatelessWidget {
               backTo: () {
                 controller.deactivateAddingTeacher();
                 controller.hideInformation();
-                controller.stopUploadingInfo();
+                controller.clearForm();
+
               },
             ),
             SizedBox(height: 20),
